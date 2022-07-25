@@ -1,33 +1,66 @@
-mysql> ALTER TABLE employee_payroll ADD gender CHAR(1) AFTER name;
-Query OK, 0 rows affected (0.02 sec)
-Records: 0  Duplicates: 0  Warnings: 0
+mysql> SELECT SUM(salary) FROM employee_payroll WHERE gender = 'M' GROUP BY gender;
++-------------+
+| SUM(salary) |
++-------------+
+|     4000000 |
++-------------+
+1 row in set (0.00 sec)
 
-mysql> DESCRIBE employee_payroll;
-+--------+--------------+------+-----+---------+----------------+
-| Field  | Type         | Null | Key | Default | Extra          |
-+--------+--------------+------+-----+---------+----------------+
-| id     | int unsigned | NO   | PRI | NULL    | auto_increment |
-| name   | varchar(150) | NO   |     | NULL    |                |
-| gender | char(1)      | YES  |     | NULL    |                |
-| salary | double       | NO   |     | NULL    |                |
-| start  | date         | NO   |     | NULL    |                |
-+--------+--------------+------+-----+---------+----------------+
-5 rows in set (0.00 sec)
+mysql> SELECT AVG(salary) FROM employee_payroll WHERE gender = 'M' GROUP BY gender;
++-------------+
+| AVG(salary) |
++-------------+
+|     2000000 |
++-------------+
+1 row in set (0.00 sec)
 
-mysql> UPDATE employee_payroll SET gender = 'M' WHERE id = 1 OR id = 3;
-Query OK, 2 rows affected (0.01 sec)
-Rows matched: 2  Changed: 2  Warnings: 0
+mysql> SELECT MAX(salary) FROM employee_payroll WHERE gender = 'M' GROUP BY gender;
++-------------+
+| MAX(salary) |
++-------------+
+|     3000000 |
++-------------+
+1 row in set (0.06 sec)
 
-mysql> UPDATE employee_payroll SET gender = 'F' WHERE id = 2;
-Query OK, 1 row affected (0.01 sec)
-Rows matched: 1  Changed: 1  Warnings: 0
+mysql> SELECT MIN(salary) FROM employee_payroll WHERE gender = 'M' GROUP BY gender;
++-------------+
+| MIN(salary) |
++-------------+
+|     1000000 |
++-------------+
+1 row in set (0.00 sec)
 
-mysql> SELECT * FROM employee_payroll;
-+----+----------+--------+---------+------------+
-| id | name     | gender | salary  | start      |
-+----+----------+--------+---------+------------+
-|  1 | Nishant  | M      | 1000000 | 2019-05-08 |
-|  2 | Ujjwal   | F      | 2000000 | 2018-01-01 |
-|  3 | Anshuman | M      | 3000000 | 2022-05-30 |
-+----+----------+--------+---------+------------+
-3 rows in set (0.00 sec)
+mysql> SELECT name, MIN(salary) FROM employee_payroll WHERE gender = 'M' GROUP BY gender;
++---------+-------------+
+| name    | MIN(salary) |
++---------+-------------+
+| Nishant |     1000000 |
++---------+-------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT gender, COUNT(NAME) FROM employee_payroll GROUP BY gender;
++--------+-------------+
+| gender | COUNT(NAME) |
++--------+-------------+
+| M      |           2 |
+| F      |           1 |
++--------+-------------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT gender, SUM(salary) FROM employee_payroll GROUP BY gender;
++--------+-------------+
+| gender | sum(salary) |
++--------+-------------+
+| M      |     4000000 |
+| F      |     2000000 |
++--------+-------------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT gender, AVG(salary) FROM employee_payroll GROUP BY gender;
++--------+-------------+
+| gender | AVG(salary) |
++--------+-------------+
+| M      |     2000000 |
+| F      |     2000000 |
++--------+-------------+
+2 rows in set (0.00 sec)
