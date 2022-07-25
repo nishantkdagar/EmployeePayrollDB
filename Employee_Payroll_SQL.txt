@@ -1,57 +1,3 @@
-mysql> DESCRIBE employee_payroll;
-+--------------+--------------+------+-----+---------+----------------+
-| Field        | Type         | Null | Key | Default | Extra          |
-+--------------+--------------+------+-----+---------+----------------+
-| id           | int unsigned | NO   | PRI | NULL    | auto_increment |
-| name         | varchar(150) | NO   |     | NULL    |                |
-| phone_number | varchar(250) | YES  |     | NULL    |                |
-| address      | varchar(250) | YES  |     | TBD     |                |
-| department   | varchar(150) | NO   |     | NULL    |                |
-| gender       | char(1)      | YES  |     | NULL    |                |
-| salary       | double       | NO   |     | NULL    |                |
-| start        | date         | NO   |     | NULL    |                |
-+--------------+--------------+------+-----+---------+----------------+
-8 rows in set (0.00 sec)
-
-mysql> ALTER TABLE employee_payroll RENAME COLUMN salary TO basic_pay;
-Query OK, 0 rows affected (0.02 sec)
-Records: 0  Duplicates: 0  Warnings: 0
-
-mysql> ALTER TABLE employee_payroll ADD deductions DOUBLE NOT NULL AFTER basic_pay;
-Query OK, 0 rows affected (0.02 sec)
-Records: 0  Duplicates: 0  Warnings: 0
-
-mysql> ALTER TABLE employee_payroll ADD taxable_pay DOUBLE NOT NULL AFTER deductions;
-Query OK, 0 rows affected (0.08 sec)
-Records: 0  Duplicates: 0  Warnings: 0
-
-mysql> ALTER TABLE employee_payroll ADD tax DOUBLE NOT NULL AFTER taxable_pay;
-Query OK, 0 rows affected (0.02 sec)
-Records: 0  Duplicates: 0  Warnings: 0
-
-mysql> ALTER TABLE employee_payroll ADD net_pay DOUBLE NOT NULL AFTER tax;
-Query OK, 0 rows affected (0.01 sec)
-Records: 0  Duplicates: 0  Warnings: 0
-
-mysql> DESCRIBE employee_payroll;
-+--------------+--------------+------+-----+---------+----------------+
-| Field        | Type         | Null | Key | Default | Extra          |
-+--------------+--------------+------+-----+---------+----------------+
-| id           | int unsigned | NO   | PRI | NULL    | auto_increment |
-| name         | varchar(150) | NO   |     | NULL    |                |
-| phone_number | varchar(250) | YES  |     | NULL    |                |
-| address      | varchar(250) | YES  |     | TBD     |                |
-| department   | varchar(150) | NO   |     | NULL    |                |
-| gender       | char(1)      | YES  |     | NULL    |                |
-| basic_pay    | double       | NO   |     | NULL    |                |
-| deductions   | double       | NO   |     | NULL    |                |
-| taxable_pay  | double       | NO   |     | NULL    |                |
-| tax          | double       | NO   |     | NULL    |                |
-| net_pay      | double       | NO   |     | NULL    |                |
-| start        | date         | NO   |     | NULL    |                |
-+--------------+--------------+------+-----+---------+----------------+
-12 rows in set (0.00 sec)
-
 mysql> SELECT * FROM employee_payroll;
 +----+----------+--------------+---------+------------+--------+-----------+------------+-------------+-----+---------+------------+
 | id | name     | phone_number | address | department | gender | basic_pay | deductions | taxable_pay | tax | net_pay | start      |
@@ -61,3 +7,33 @@ mysql> SELECT * FROM employee_payroll;
 |  3 | Anshuman | NULL         | NULL    |            | M      |   3000000 |          0 |           0 |   0 |       0 | 2022-05-30 |
 +----+----------+--------------+---------+------------+--------+-----------+------------+-------------+-----+---------+------------+
 3 rows in set (0.00 sec)
+
+mysql> UPDATE employee_payroll SET department = 'Marketing' WHERE name = 'Ujjwal';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM employee_payroll;
++----+----------+--------------+---------+------------+--------+-----------+------------+-------------+-----+---------+------------+
+| id | name     | phone_number | address | department | gender | basic_pay | deductions | taxable_pay | tax | net_pay | start      |
++----+----------+--------------+---------+------------+--------+-----------+------------+-------------+-----+---------+------------+
+|  1 | Nishant  | NULL         | NULL    |            | M      |   1000000 |          0 |           0 |   0 |       0 | 2019-05-08 |
+|  2 | Ujjwal   | NULL         | NULL    | Marketing  | F      |   2000000 |          0 |           0 |   0 |       0 | 2018-01-01 |
+|  3 | Anshuman | NULL         | NULL    |            | M      |   3000000 |          0 |           0 |   0 |       0 | 2022-05-30 |
++----+----------+--------------+---------+------------+--------+-----------+------------+-------------+-----+---------+------------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO employee_payroll
+    -> (name, department, gender, basic_pay, deductions, taxable_pay, tax, net_pay, start) VALUES
+    -> ('Ujjwal', 'Sales', 'F', 4000000.00, 1000000.00, 3000000.00, 300000.00, 2700000.00, '2020-06-01');
+Query OK, 1 row affected (0.07 sec)
+
+mysql> SELECT * FROM employee_payroll;
++----+----------+--------------+---------+------------+--------+-----------+------------+-------------+--------+---------+------------+
+| id | name     | phone_number | address | department | gender | basic_pay | deductions | taxable_pay | tax    | net_pay | start      |
++----+----------+--------------+---------+------------+--------+-----------+------------+-------------+--------+---------+------------+
+|  1 | Nishant  | NULL         | NULL    |            | M      |   1000000 |          0 |           0 |      0 |       0 | 2019-05-08 |
+|  2 | Ujjwal   | NULL         | NULL    | Marketing  | F      |   2000000 |          0 |           0 |      0 |       0 | 2018-01-01 |
+|  3 | Anshuman | NULL         | NULL    |            | M      |   3000000 |          0 |           0 |      0 |       0 | 2022-05-30 |
+|  4 | Ujjwal   | NULL         | TBD     | Sales      | F      |   4000000 |    1000000 |     3000000 | 300000 | 2700000 | 2020-06-01 |
++----+----------+--------------+---------+------------+--------+-----------+------------+-------------+--------+---------+------------+
+4 rows in set (0.00 sec)
